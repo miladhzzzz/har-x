@@ -6,21 +6,21 @@ This is a Python script that parses and analyzes HAR (HTTP Archive) files. HAR f
 ## Installation
 
 To install the required libraries, run the following command:
-'''sh
+'''shell
 pip install -r requirements.txt
 '''
 
 ## Usage
 
 To run the script, open a terminal and navigate to the directory containing the script. Then, run the following command:
-'''sh
+'''shell
 python har.analyze.py -f example.har -o output.csv --plot
 '''
 This will parse the HAR file located at `example.har`, create a csv document containing details about all the requests ,
 summarize the data in JSON format and output to terminal, and generate analyses graphs.
 
 You also can save the json output with following command:
-'''sh
+'''shell
 python har.analyze.py -f example.har -o output.csv --plot >> summary.json
 '''
 This will do all the above plus saving the summary as a json file in the working directory.
@@ -48,7 +48,7 @@ The script outputs the following:
 - A Multipane graph analyzing different aspects and visualizing them.
 !()[output/google.png]
 - A summary of the data in JSON format.
-'''sh
+'''shell
 {
     "total_requests": 42,
     "failed_request": 12,
@@ -72,7 +72,6 @@ The script outputs the following:
         "image/jpeg": 1
     }
 }
-
 '''
 
 ## HAR Explanation
