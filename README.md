@@ -51,7 +51,8 @@ The script outputs the following:
 - A table of the filtered data either in terminal output or a csv file.
 (output.csv)
 - A Multipane graph analyzing different aspects and visualizing them.
-!()[output/google.png]
+  ![](output/google.png)
+
 - A summary of the data in JSON format.
 ```shell
 {
