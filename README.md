@@ -49,7 +49,8 @@ The script outputs the following:
 - You can find examples of outputs for google.com and perplexity.ai in /output directory.
 
 - A table of the filtered data either in terminal output or a csv file.
-(output.csv)
+![](output)
+
 - A Multipane graph analyzing different aspects and visualizing them.
   ![](output/google.png)
 
