@@ -1,0 +1,72 @@
+{
+    "total_requests": 89,
+    "failed_request": 20,
+    "average_time": 6352.410460674438,
+    "fastest_request": 0.18599999748403206,
+    "slowest_request": 29983.005999998568,
+    "status_counts": {
+        "200": 69,
+        "0": 16,
+        "101": 2,
+        "204": 1,
+        "304": 1
+    },
+    "content_types": {
+        "application/javascript": 48,
+        "x-unknown": 23,
+        "font/woff2": 11,
+        "text/plain": 3,
+        "image/avif": 1,
+        "image/x-icon": 1,
+        "text/html": 1,
+        "application/json": 1
+    }
+}
+{
+    "total_requests": 89,
+    "failed_request": 20,
+    "average_time": 6352.410460674438,
+    "fastest_request": 0.18599999748403206,
+    "slowest_request": 29983.005999998568,
+    "status_counts": {
+        "200": 69,
+        "0": 16,
+        "101": 2,
+        "204": 1,
+        "304": 1
+    },
+    "content_types": {
+        "application/javascript": 48,
+        "x-unknown": 23,
+        "font/woff2": 11,
+        "text/plain": 3,
+        "image/avif": 1,
+        "image/x-icon": 1,
+        "text/html": 1,
+        "application/json": 1
+    }
+}
+{
+    "total_requests": 89,
+    "failed_request": 20,
+    "average_time": 6352.410460674438,
+    "fastest_request": 0.18599999748403206,
+    "slowest_request": 29983.005999998568,
+    "status_counts": {
+        "200": 69,
+        "0": 16,
+        "101": 2,
+        "204": 1,
+        "304": 1
+    },
+    "content_types": {
+        "application/javascript": 48,
+        "x-unknown": 23,
+        "font/woff2": 11,
+        "text/plain": 3,
+        "image/avif": 1,
+        "image/x-icon": 1,
+        "text/html": 1,
+        "application/json": 1
+    }
+}

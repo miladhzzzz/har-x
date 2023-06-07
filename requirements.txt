@@ -1,0 +1,4 @@
+pandas
+json
+tabulate
+matplotlib
