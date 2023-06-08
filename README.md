@@ -3,7 +3,50 @@
 
 This is a Python script that parses and analyzes HAR (HTTP Archive) files. HAR files usually contain  ~30K lines of code and we parse that and create analyses visualization, json summary, a complete list of all requests in csv sub ~5s !!
 
-## Installation
+
+## What is Har?
+
+**"har files are pcaps of the http realm!"**
+
+HAR (HTTP Archive) is a JSON-formatted file that captures the network traffic of a web page. It contains information about each request made by the page, including the URL, method, response status, response time, and other details. 
+
+## How is har files created?
+
+When you type in a URL into your browser theres 3 stages:
+1. your computer tries to resolve the hostname you provided meaning it will ask a DNS server for IP addresses.(DNS)
+2. a tcp connection will be established to the IP address we got from DNS , handshakes , tls , http are negotiated. (TCP)
+3. your browser makes a HTTP get request to the url using TCP connection we established earlier.(HTTP)
+
+Finally you see your web page! yay!
+
+so when we are dealing with web applications if we want to know whats exactly going on in all the layers mentioned above we need to query dns servers, use wireshark to capture packets and use Developer Tools in our browser to capture everything and then analyze it!
+
+well! capy will do all that for you its a Go program that does the above stages and saves the files in your output directory.
+so you can install capy with this commands:
+
+#### install
+install capy using our install script which executes the build code section for you:
+```shell
+curl -Lo https://github.com/miladhzzzz/har-x/hack/install.sh | sh
+```
+#### Usage 
+```shell
+./capy -url=<URL> -dns=<DNS server> -output=<output directory>
+```
+
+#### build from scratch!
+Or you can build capy just make sure you have Go installed:
+```shell
+git clone https://github.com/miladhzzzz/har-x
+cd har-x/capy
+go mod download
+cd cmd && go build -o ../bin/capy
+sudo cp ../../bin/capy /usr/local/bin
+```
+
+
+
+## HAR analyzing with Python
 
 To install the required libraries, run the following command:
 
@@ -81,15 +124,9 @@ The script outputs the following:
 }
 ```
 
-## HAR Explanation
-
-HAR (HTTP Archive) is a JSON-formatted file that captures the network traffic of a web page. It contains information about each request made by the page, including the URL, method, response status, response time, and other details. 
-
 ## Why This Tool is Useful
 
 The HAR Parser tool is useful for web developers, cybersecurity analysts, and web problem analysts who want to analyze the network traffic of a web page and identify performance issues. It can help developers identify slow-loading resources, identify resource usage patterns, and compare the performance of different pages or versions of a website. Additionally, the tool can be used to analyze web services like Netflix and provide valuable insights into their system architecture and functionality. This can help identify potential performance issues or bottlenecks and areas for optimization. Overall, the HAR Parser tool is a valuable tool for anyone involved in web development, performance testing, or system analysis.
-
-
 
 ## License
 
