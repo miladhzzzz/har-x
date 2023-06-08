@@ -1,7 +1,5 @@
-!#/bin/bash
+#!/bin/bash
 
-git clone https://github.com/miladhzzzz/har-x
-cd har-x/capy
-go mod download
-cd cmd && go build -o ../../bin/capy
-cp ../../bin/capy /usr/local/bin
+curl -O https://github.com/miladhzzzz/har-x/raw/master/bin/capy
+cp capy /usr/local/bin
+chmod +x /usr/local/bin/capy

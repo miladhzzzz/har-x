@@ -19,15 +19,18 @@ When you type in a URL into your browser theres 3 stages:
 
 Finally you see your web page! yay!
 
+#### Browser
 so when we are dealing with web applications if we want to know whats exactly going on in all the layers mentioned above we need to query dns servers, use wireshark to capture packets and use Developer Tools in our browser to capture everything and then analyze it!
 
-well! capy will do all that for you its a Go program that does the above stages and saves the files in your output directory.
+
+#### Capy Cli Tool!
+well! **Capy** will do all that for you its a Go program that does the above stages and saves the files in your output directory.
 so you can install capy with this commands:
 
 #### install
 install capy using our install script which executes the build code section for you:
 ```shell
-curl -Lo https://github.com/miladhzzzz/har-x/hack/install.sh | sh
+curl -Lo https://github.com/miladhzzzz/har-x/hack/install.sh | su - sh
 ```
 #### Usage 
 ```shell
