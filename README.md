@@ -25,10 +25,10 @@ so when we are dealing with web applications if we want to know whats exactly go
 
 #### Capy Cli Tool!
 well! **Capy** will do all that for you its a Go program that does the above stages and saves the files in your output directory.
-so you can install capy with this commands:
+so you can install capy with these methods:
 
 #### install
-install capy using our install script which executes the build code section for you:
+install capy using our install script:
 ```shell
 curl -Lo https://github.com/miladhzzzz/har-x/hack/install.sh | su - sh
 ```
@@ -46,7 +46,7 @@ go mod download
 cd cmd && go build -o ../bin/capy
 sudo cp ../../bin/capy /usr/local/bin
 ```
-
+**theres also a build.sh file in root dir of /har-x that you can use to automate your build's**
 
 
 ## HAR analyzing with Python
