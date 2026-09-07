@@ -1,136 +1,78 @@
 # HAR-X
-### HAR eXploration and Rapid Intelligence
 
-This is a Python script that parses and analyzes HAR (HTTP Archive) files. HAR files usually contain  ~30K lines of code and we parse that and create analyses visualization, json summary, a complete list of all requests in csv sub ~5s !!
+A rewrite of the old `capy`/`har.analyze.py` pair into two small, coherent
+tools joined by one interface: the **HAR file**.
 
-
-## What is Har?
-
-**"har files are pcaps of the http realm!"**
-
-HAR (HTTP Archive) is a JSON-formatted file that captures the network traffic of a web page. It contains information about each request made by the page, including the URL, method, response status, response time, and other details. 
-
-## How is har files created?
-
-When you type in a URL into your browser theres 3 stages:
-1. your computer tries to resolve the hostname you provided meaning it will ask a DNS server for IP addresses.(DNS)
-2. a tcp connection will be established to the IP address we got from DNS , handshakes , tls , http are negotiated. (TCP)
-3. your browser makes a HTTP get request to the url using TCP connection we established earlier.(HTTP)
-
-Finally you see your web page! yay!
-
-#### Browser
-so when we are dealing with web applications if we want to know whats exactly going on in all the layers mentioned above we need to query dns servers, use wireshark to capture packets and use Developer Tools in our browser to capture everything and then analyze it!
-
-
-#### Capy Cli Tool!
-well! **Capy** will do all that for you its a Go program that does the above stages and saves the files in your output directory.
-so you can install capy with these methods:
-
-#### install
-install capy using our install script:
-```shell
-curl -Lo https://github.com/miladhzzzz/har-x/hack/install.sh | su - sh
-```
-#### Usage 
-```shell
-./capy -url=<URL> -dns=<DNS server> -output=<output directory>
+```text
+harx/
+├── capture/     Go tool: pops up a real Chrome window, records every
+│                network request during your session, writes a spec-
+│                compliant .har file.
+├── analyzer/    Python + Streamlit app: loads .har files (from capture/
+│                or any browser export) and gives you an interactive
+│                waterfall, filters, and summary stats.
+└── captures/    Shared output folder. capture/ writes here by default;
+                 analyzer/ scans it by default. (Two real-world sample
+                 .har files are included so you can try the analyzer
+                 immediately.)
 ```
 
-#### build from scratch!
-Or you can build capy just make sure you have Go installed:
-```shell
-git clone https://github.com/miladhzzzz/har-x
-cd har-x/capy
-go mod download
-cd cmd && go build -o ../bin/capy
-sudo cp ../../bin/capy /usr/local/bin
+## Why the old version didn't work
+
+The old `capy` tool did a single raw `net/http.Get()` and faked a one-entry
+HAR from it, plus an unrelated raw `pcap` dump. It never ran a browser, so
+it could never see JS-driven requests, CSS/images/XHR/fetch, or real
+per-phase timings (DNS/connect/TLS/send/wait/receive) — everything that
+makes a HAR a HAR. `capture/` replaces that outright by driving a real
+Chrome instance over the DevTools Protocol (CDP) and recording its actual
+`Network.*` event stream, the same way DevTools' own "Network" tab and
+Lighthouse do it.
+
+## 1. Capture
+
+```bash
+cd capture
+go build -o harx-capture ./cmd/harx-capture
+./harx-capture -out ../captures                 # opens a blank window
+./harx-capture -url https://example.com -out ../captures -title example
 ```
-**theres also a build.sh file in root dir of /har-x that you can use to automate your build's**
 
+A real, visible Chrome window opens. Browse normally — log in, click
+around, trigger whatever XHR/fetch/SPA traffic you care about. Close the
+window (or Ctrl+C the terminal) to stop recording; a `.har` file lands in
+`captures/`.
 
-## HAR analyzing with Python
+Flags:
 
-To install the required libraries, run the following command:
+- `-url` — optional starting page (default: opens a blank tab)
+- `-out` — output directory (default `./captures`)
+- `-profile` — reuse a Chrome user-data-dir, so you don't have to log in
+  every session
+- `-title` — label included in the output filename
 
-```shell
+## 2. Analyze
+
+```bash
+cd analyzer
 pip install -r requirements.txt
+streamlit run app.py
 ```
 
-## Usage
+Opens in your browser. Pick a capture from the sidebar (auto-discovered
+from `../captures/`) or upload any `.har` file — this works on browser
+DevTools exports too, not just `harx-capture` output. You get:
 
-To run the script, open a terminal and navigate to the directory containing the script. Then, run the following command:
+- an interactive waterfall (stacked by timing phase: blocked/DNS/connect/
+  SSL/send/wait/receive)
+- filters: status range, method, resource type, domain, content-type
+- status code / content-type / size distributions
+- a sortable request table
+- per-request detail: headers, POST body, response body preview, full
+  timing breakdown
 
-```shell
-python har.analyze.py -f example.har -o output.csv --plot
-```
+## Status
 
-This will parse the HAR file located at `example.har`, create a csv document containing details about all the requests ,
-summarize the data in JSON format and output to terminal, and generate analyses graphs.
-
-You also can save the json output with following command:
-
-```shell
-python har.analyze.py -f example.har -o output.csv --plot >> summary.json
-```
-
-This will do all the above plus saving the summary as a json file in the working directory.
-
-## Command-Line Arguments
-
-The script accepts the following command-line arguments:
-
-- `-f` or `--file`: The path to the HAR file to be parsed.
-- `-s` or `--status`: The status code range to include (e.g. 200-299).
-- `-c` or `--content`: The content type to include (e.g. text/html).
-- `-g` or `--group`: The column to group by (e.g. url).
-- `-o` or `--output`: The output file path if not present will use STDOUT as output.
-- `--summarize`: Summarizes the HAR file and returns json.
-- `--plot`: Generates analyses graph.
-
-## Output
-
-The script outputs the following:
-
-- You can find examples of outputs for google.com and perplexity.ai in /output directory.
-
-- A table of the filtered data either in terminal output or a csv file.
-![](output/google.csv)
-
-- A Multipane graph analyzing different aspects and visualizing them.
-  ![](output/google.png)
-
-- A summary of the data in JSON format.
-```shell
-{
-    "total_requests": 42,
-    "failed_request": 12,
-    "average_time": 265.2077380945452,
-    "fastest_request": 4.899999999906868,
-    "slowest_request": 1201.3089999941421,
-    "status_counts": {
-        "200": 30,
-        "204": 12
-    },
-    "content_types": {
-        "text/html": 16,
-        "text/javascript": 13,
-        "image/png": 3,
-        "text/plain": 3,
-        "application/json": 2,
-        "font/woff2": 1,
-        "image/x-icon": 1,
-        "image/webp": 1,
-        "text/css": 1,
-        "image/jpeg": 1
-    }
-}
-```
-
-## Why This Tool is Useful
-
-The HAR Parser tool is useful for web developers, cybersecurity analysts, and web problem analysts who want to analyze the network traffic of a web page and identify performance issues. It can help developers identify slow-loading resources, identify resource usage patterns, and compare the performance of different pages or versions of a website. Additionally, the tool can be used to analyze web services like Netflix and provide valuable insights into their system architecture and functionality. This can help identify potential performance issues or bottlenecks and areas for optimization. Overall, the HAR Parser tool is a valuable tool for anyone involved in web development, performance testing, or system analysis.
-
-## License
-
-This script is licensed under the MIT License. See the `LICENSE` file for more information.
+- [x] Capture rewritten on chromedp/CDP — produces real, multi-entry,
+      spec-compliant HAR with per-phase timings
+- [x] Analyzer rewritten in Streamlit — interactive replacement for
+      `har.analyze.py`

@@ -1,4 +1,0 @@
-pandas
-json
-tabulate
-matplotlib
